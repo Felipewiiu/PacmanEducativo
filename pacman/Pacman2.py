@@ -12,7 +12,17 @@ class Pacman:
         self.centro_x = 400
         self.centro_y = 300
         self.tamanho = 100
+        self.velocidade_x = 1
         self.raio = int(self.tamanho / 2)
+
+    def calcular_regras(self):
+        self.centro_x = self.centro_x + self.velocidade_x
+
+        if self.centro_x + self.raio > 800:
+            self.velocidade_x = -1
+
+        if self.centro_x - self.raio < 0:
+            self.velocidade_x = 1
     def pintar(self, tela):
         # Desenhar o corpo do pacman
         pygame.draw.circle(tela, AMARELO, (self.centro_x, self.centro_y), self.raio, 0)
@@ -33,10 +43,15 @@ if __name__ == "__main__":
     Pacman = Pacman()
 
     while True:
+        # calcular as regras
+        Pacman.calcular_regras()
+
         # Pintar a tela
+        screen.fill(PRETO)
         Pacman.pintar(screen)
         pygame.display.update()
 
+        # Captura os eventos
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 exit()
