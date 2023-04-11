@@ -6,6 +6,7 @@ screen = pygame.display.set_mode((800, 600), 0)
 
 AMARELO = (255, 255, 0)
 PRETO = (0, 0, 0)
+VELOCIDADE = 1
 
 class Pacman:
     def __init__(self):
@@ -13,7 +14,7 @@ class Pacman:
         self.linha = 1
         self.centro_x = 400
         self.centro_y = 300
-        self.tamanho = 800 // 30
+        self.tamanho = 1600 // 30
         self.velocidade_x = 0
         self.velocidade_y = 0
         self.raio = int(self.tamanho / 2)
@@ -47,7 +48,23 @@ class Pacman:
         for e in eventos:# isso lê uma fila de eventos
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_RIGHT:
-                    self.velocidade_x = 1
+                    self.velocidade_x = VELOCIDADE
+                elif e.key == pygame.K_LEFT:
+                    self.velocidade_x = -VELOCIDADE
+                elif e.key == pygame.K_UP:
+                    self.velocidade_y = -VELOCIDADE
+                elif e.key == pygame.K_DOWN:
+                    self.velocidade_y = VELOCIDADE
+
+            elif e.type == pygame.KEYUP:
+                if e.key == pygame.K_RIGHT:
+                    self.velocidade_x = 0
+                elif e.key == pygame.K_LEFT:
+                    self.velocidade_x = 0
+                elif e.key == pygame.K_UP:
+                    self.velocidade_y = 0
+                elif e.key == pygame.K_DOWN:
+                    self.velocidade_y = 0
 
 if __name__ == "__main__":
     Pacman = Pacman()
@@ -60,7 +77,7 @@ if __name__ == "__main__":
         screen.fill(PRETO)
         Pacman.pintar(screen)
         pygame.display.update()
-        pygame.time.delay(100)
+        pygame.time.delay(40)
 
         # Captura os eventos
         eventos = pygame.event.get()
@@ -68,6 +85,7 @@ if __name__ == "__main__":
             if e.type == pygame.QUIT:
                 exit()
         Pacman.processar_evento(eventos)
+
 
 
 
