@@ -10,8 +10,9 @@ AZUL = (0, 0, 255)
 VELOCIDADE = 1
 
 class Cenario:
-    def __init__(self, tamanho):#isso é um construtor
+    def __init__(self, tamanho, pac):#isso é um construtor
         self.tamanho = tamanho
+        self.pacman = pac
         self.matriz = [
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
             [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
@@ -61,7 +62,12 @@ class Cenario:
         for numero_linha, linha in enumerate(self.matriz):
             self.pintar_linha(tela, numero_linha, linha)
 
-
+    def calcular_regras(self):
+        col = self.pacman.coluna_intencao
+        lin = self.pacman.linha_intencao
+        if 0 <= col <= 27 and 0 <= lin <= 29:
+            if self.matriz[lin][col] != 2:
+                self.pacman.aceitar_movimento()
 class Pacman:
     def __init__(self, tamanho):
         self.coluna = 1
@@ -72,10 +78,12 @@ class Pacman:
         self.velocidade_x = 0
         self.velocidade_y = 0
         self.raio = int(self.tamanho / 2)
+        self.coluna_intencao = self.coluna
+        self.linha_intencao = self.linha
 
     def calcular_regras(self):
-        self.coluna = self.coluna + self.velocidade_x
-        self.linha = self.linha + self.velocidade_y
+        self.coluna_intencao = self.coluna + self.velocidade_x
+        self.linha_intencao = self.linha + self.velocidade_y
         self.centro_x = int(self.coluna * self.tamanho + self.raio)
         self.centro_y = int(self.linha * self.tamanho + self.raio)
 
@@ -120,14 +128,19 @@ class Pacman:
                 elif e.key == pygame.K_DOWN:
                     self.velocidade_y = 0
 
+    def aceitar_movimento(self):
+        self.linha = self.linha_intencao
+        self.coluna = self.coluna_intencao
+
 if __name__ == "__main__":
     size = 600 // 30
     Pacman = Pacman(size)# aqui se cria uma instância de pacman
-    cenario = Cenario(size)
+    cenario = Cenario(size, Pacman)
 
     while True:
         # calcular as regras
         Pacman.calcular_regras()
+        cenario.calcular_regras()
 
         # Pintar a tela
         screen.fill(PRETO)
