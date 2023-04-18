@@ -6,6 +6,10 @@ screen = pygame.display.set_mode((800, 600), 0)
 
 fonte = pygame.font.SysFont("arial", 32, True, False)
 
+pygame.mixer.music.load("Legend-of-Zelda-A-link-to-The-Past-music-overworld-theme.mp3")
+pygame.mixer.music.play(-1)
+
+
 AMARELO = (255, 255, 0)
 PRETO = (0, 0, 0)
 AZUL = (0, 0, 255)
@@ -48,6 +52,12 @@ class Cenario:
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 
         ]
+    # Código desenvolvido por Felipe
+
+    # pergunta = fonte.render("Quanto é 7 x 7?", True, AMARELO)
+    # if self.pontos == 10:
+    #     print("Respota correta")
+
 
     def pintar_pontos(self, tela):
         pontos_x = 30 * self.tamanho
