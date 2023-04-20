@@ -4,9 +4,10 @@ pygame.init()
 
 screen = pygame.display.set_mode((800, 600), 0)
 
-fonte = pygame.font.SysFont("arial", 32, True, False)
+fonte = pygame.font.SysFont("arial", 28, True, False)
+subtitulo = pygame.font.SysFont("arial", 20, True, False)
 
-pygame.mixer.music.load("Legend-of-Zelda-A-link-to-The-Past-music-overworld-theme.mp3")
+pygame.mixer.music.load("actiontheme-v3.mp3")
 pygame.mixer.music.play(-1)
 
 
@@ -52,18 +53,22 @@ class Cenario:
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 
         ]
-    # Código desenvolvido por Felipe
+     # Código desenvolvido por Felipe
+    def questionario(self, tela):
+           pontos_x = 30 * self.tamanho
+           pergunta = subtitulo.render("Quanto é 7 x 7?", True, AMARELO)
+           tela.blit(pergunta, (pontos_x, 100))
 
-    # pergunta = fonte.render("Quanto é 7 x 7?", True, AMARELO)
-    # if self.pontos == 10:
-    #     print("Respota correta")
 
 
     def pintar_pontos(self, tela):
         pontos_x = 30 * self.tamanho
-        img_pontos = fonte.render(f"Scor: 0{self.pontos}", True, AMARELO)
+        img_pontos = fonte.render(f"Score: 0{self.pontos}", True, AMARELO)
         tela.blit(img_pontos, (pontos_x, 50))
-
+        #codigo do felipe
+        #
+        if self.pontos > 10:
+            self.questionario(tela)
 
     def pintar_linha(self, tela, numero_linha, linha):
         for numero_coluna, coluna in enumerate(linha):
