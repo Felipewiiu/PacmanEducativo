@@ -55,9 +55,9 @@ class Cenario:
         ]
      # Código desenvolvido por Felipe
     def questionario(self, tela):
-           pontos_x = 30 * self.tamanho
+           posicao_x = 30 * self.tamanho
            pergunta = subtitulo.render("Quanto é 7 x 7?", True, AMARELO)
-           tela.blit(pergunta, (pontos_x, 100))
+           tela.blit(pergunta, (posicao_x, 100))
 
 
 
