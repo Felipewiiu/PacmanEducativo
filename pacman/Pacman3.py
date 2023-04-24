@@ -1,8 +1,9 @@
 import pygame
+import time
 
 pygame.init()
 
-screen = pygame.display.set_mode((800, 600), 0)
+screen = pygame.display.set_mode((1200, 600), 0)
 
 fonte = pygame.font.SysFont("arial", 28, True, False)
 subtitulo = pygame.font.SysFont("arial", 20, True, False)
@@ -20,7 +21,14 @@ class Cenario:
     def __init__(self, tamanho, pac):#isso é um construtor
         self.tamanho = tamanho
         self.pacman = pac
+        self.tempo_inicio = time.time()
+        self.tempo = int(time.time() - self.tempo_inicio)
+        self.segundo = 0
+        self.minuto = 0
         self.pontos = 0
+        self.questoes = ["Quanto é 7 x 7?", "Quanto é 6 x 3?", "Quanto é 3 x 9?", "Quanto é 45 + 7?", "Quanto é 30 - 27?"]
+        self.gabarito = ["49","18","27","52","3"]
+        self.texto_resposta = ''
         self.matriz = [
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
             [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
@@ -54,21 +62,77 @@ class Cenario:
 
         ]
      # Código desenvolvido por Felipe
-    def questionario(self, tela):
+
+    def relogio(self):
+        self.tempo  += 1
+        if self.tempo == int(20):
+            self.tempo = 0
+            self.segundo += 1
+        if self.segundo == 60:
+            self.segundo = 0
+            self.minuto += 1
+        if self.minuto == 1:
+            print("Game over")
+
+
+
+
+# Aqui onde são geradas as perguntas
+    def questionario(self, tela, numero):
            posicao_x = 30 * self.tamanho
-           pergunta = subtitulo.render("Quanto é 7 x 7?", True, AMARELO)
-           tela.blit(pergunta, (posicao_x, 100))
+
+           pergunta = subtitulo.render(self.questoes[numero], True, AMARELO)
+           resposta = subtitulo.render(self.texto_resposta, True, AMARELO)
+
+           tela.blit(pergunta, (posicao_x, 150))
+           tela.blit(resposta, (posicao_x, 250))
 
 
 
     def pintar_pontos(self, tela):
-        pontos_x = 30 * self.tamanho
-        img_pontos = fonte.render(f"Score: 0{self.pontos}", True, AMARELO)
-        tela.blit(img_pontos, (pontos_x, 50))
-        #codigo do felipe
+        pontos_x = 28 * self.tamanho
+        posicao_x = 30 * self.tamanho
+        img_pontos = fonte.render(f"Tempo: 0{self.minuto}: {self.segundo}", True, AMARELO)
+        chamada = subtitulo.render("Acerte e ganhe mas tempo!", True, AMARELO)
+        tela.blit(chamada, (posicao_x, 100))
+        tela.blit(img_pontos, (posicao_x, 50))
+
+        input_box = pygame.Rect(100, 100, 140, 32)
+        text = ''
+        #Essa parte é a lógica das perguntas
         #
-        if self.pontos > 10:
-            self.questionario(tela)
+        if self.pontos > 10 and self.pontos < 60:
+            self.questionario(tela,0)
+            if self.texto_resposta == self.gabarito[0]:
+                print("Resposta correta")
+                self.texto_resposta = "Você acertou"
+            elif self.texto_resposta != self.gabarito[0] and self.texto_resposta != "":
+                print("Resposta errada")
+
+        if self.pontos > 60 and self.pontos < 90:
+            self.questionario(tela,1)
+            if self.texto_resposta == self.gabarito[1]:
+                print("Resposta correta")
+                self.texto_resposta = "Você acertou"
+            elif self.texto_resposta != self.gabarito[1]:
+                print("Resposta errada")
+
+        if self.pontos > 90 and self.pontos < 120:
+            self.questionario(tela,2)
+        if self.pontos > 120 and self.pontos < 160:
+            self.questionario(tela,3)
+        if self.pontos > 160 and self.pontos < 200:
+            self.questionario(tela,4)
+
+    def processar_eventos(self,eventos):
+        for e in eventos:
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_BACKSPACE:
+                    # Se a tecla de retrocesso for pressionada, remove o último caractere
+                    self.texto_resposta = self.texto_resposta[:-1]
+                elif e.unicode.isprintable():
+                    # Se um caractere imprimível for pressionado, adiciona-o ao texto
+                    self.texto_resposta += e.unicode
 
     def pintar_linha(self, tela, numero_linha, linha):
         for numero_coluna, coluna in enumerate(linha):
@@ -170,13 +234,14 @@ if __name__ == "__main__":
         # calcular as regras
         Pacman.calcular_regras()
         cenario.calcular_regras()
+        cenario.relogio()
 
         # Pintar a tela
         screen.fill(PRETO)
         cenario.pintar(screen)
         Pacman.pintar(screen)
         pygame.display.update()
-        pygame.time.delay(40)
+        pygame.time.delay(45)
 
         # Captura os eventos
         eventos = pygame.event.get()
@@ -184,6 +249,8 @@ if __name__ == "__main__":
             if e.type == pygame.QUIT:
                 exit()
         Pacman.processar_evento(eventos)
+        cenario.processar_eventos(eventos)
+
 
 
 
