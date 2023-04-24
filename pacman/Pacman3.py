@@ -28,6 +28,7 @@ class Cenario:
         self.pontos = 0
         self.questoes = ["Quanto é 7 x 7?", "Quanto é 6 x 3?", "Quanto é 3 x 9?", "Quanto é 45 + 7?", "Quanto é 30 - 27?"]
         self.gabarito = ["49","18","27","52","3"]
+        self.resultado = ["Voçê acertou!", "Voce errou"]
         self.texto_resposta = ''
         self.matriz = [
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
@@ -88,6 +89,12 @@ class Cenario:
            tela.blit(resposta, (posicao_x, 250))
 
 
+    # Aqui fica a função que passa o resultado para a tela
+    def passa_resultado(self, tela, index):
+        posicao_x = 30 * self.tamanho
+        mostra_resultado = subtitulo.render(self.resultado[index], True, AMARELO)
+        tela.blit(mostra_resultado, (posicao_x, 270))
+
 
     def pintar_pontos(self, tela):
         pontos_x = 28 * self.tamanho
@@ -105,15 +112,16 @@ class Cenario:
             self.questionario(tela,0)
             if self.texto_resposta == self.gabarito[0]:
                 print("Resposta correta")
-                self.texto_resposta = "Você acertou"
+                self.passa_resultado(tela, 0)
             elif self.texto_resposta != self.gabarito[0] and self.texto_resposta != "":
                 print("Resposta errada")
+                self.passa_resultado(tela, 1)
 
         if self.pontos > 60 and self.pontos < 90:
             self.questionario(tela,1)
             if self.texto_resposta == self.gabarito[1]:
                 print("Resposta correta")
-                self.texto_resposta = "Você acertou"
+
             elif self.texto_resposta != self.gabarito[1]:
                 print("Resposta errada")
 
