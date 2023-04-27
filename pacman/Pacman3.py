@@ -28,7 +28,7 @@ class Cenario:
         self.pontos = 0
         self.questoes = ["Quanto é 7 x 7?", "Quanto é 6 x 3?", "Quanto é 3 x 9?", "Quanto é 45 + 7?", "Quanto é 30 - 27?"]
         self.gabarito = ["49","18","27","52","3"]
-        self.resultado = ["Voçê acertou!", "Voce errou"]
+        self.resultado = "O teste funcionou"
         self.texto_resposta = ''
         self.matriz = [
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
@@ -90,9 +90,16 @@ class Cenario:
 
 
     # Aqui fica a função que passa o resultado para a tela
-    def passa_resultado(self, tela, index):
+    def passa_resultado(self, tela):
+        if self.texto_resposta == self.gabarito[0]:
+            print("Resposta correta")
+            self.resultado = "Você estava certo"
+        elif self.texto_resposta != self.gabarito[0] and self.texto_resposta != "":
+            print("Resposta errada")
+            self.resultado = "Você estava errado"
+
         posicao_x = 30 * self.tamanho
-        mostra_resultado = subtitulo.render(self.resultado[index], True, AMARELO)
+        mostra_resultado = subtitulo.render(self.resultado, True, AMARELO)
         tela.blit(mostra_resultado, (posicao_x, 270))
 
 
@@ -110,29 +117,25 @@ class Cenario:
         #
         if self.pontos > 10 and self.pontos < 60:
             self.questionario(tela,0)
-            if self.texto_resposta == self.gabarito[0]:
-                print("Resposta correta")
-                self.passa_resultado(tela, 0)
-            elif self.texto_resposta != self.gabarito[0] and self.texto_resposta != "":
-                print("Resposta errada")
-                self.passa_resultado(tela, 1)
 
-        if self.pontos > 60 and self.pontos < 90:
-            self.questionario(tela,1)
-            if self.texto_resposta == self.gabarito[1]:
-                print("Resposta correta")
 
-            elif self.texto_resposta != self.gabarito[1]:
-                print("Resposta errada")
 
-        if self.pontos > 90 and self.pontos < 120:
-            self.questionario(tela,2)
-        if self.pontos > 120 and self.pontos < 160:
-            self.questionario(tela,3)
-        if self.pontos > 160 and self.pontos < 200:
-            self.questionario(tela,4)
+        # if self.pontos > 60 and self.pontos < 90:
+        #     self.questionario(tela,1)
+        #     if self.texto_resposta == self.gabarito[1]:
+        #         print("Resposta correta")
+        #
+        #     elif self.texto_resposta != self.gabarito[1]:
+        #         print("Resposta errada")
+        #
+        # if self.pontos > 90 and self.pontos < 120:
+        #     self.questionario(tela,2)
+        # if self.pontos > 120 and self.pontos < 160:
+        #     self.questionario(tela,3)
+        # if self.pontos > 160 and self.pontos < 200:
+        #     self.questionario(tela,4)
 
-    def processar_eventos(self,eventos):
+    def processar_eventos(self, eventos, tela):
         for e in eventos:
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_BACKSPACE:
@@ -141,6 +144,10 @@ class Cenario:
                 elif e.unicode.isprintable():
                     # Se um caractere imprimível for pressionado, adiciona-o ao texto
                     self.texto_resposta += e.unicode
+                elif e.key == pygame.K_RETURN:
+                    self.passa_resultado(tela)
+
+
 
     def pintar_linha(self, tela, numero_linha, linha):
         for numero_coluna, coluna in enumerate(linha):
@@ -257,7 +264,7 @@ if __name__ == "__main__":
             if e.type == pygame.QUIT:
                 exit()
         Pacman.processar_evento(eventos)
-        cenario.processar_eventos(eventos)
+        cenario.processar_eventos(eventos, screen)
 
 
 
