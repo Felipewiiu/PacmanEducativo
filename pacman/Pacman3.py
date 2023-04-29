@@ -75,7 +75,7 @@ class Cenario:
             self.segundo = 0
             self.minuto += 1
         if self.minuto == 1:
-            print("Game over")
+            exit()
 
 
 
@@ -105,7 +105,8 @@ class Cenario:
         posicao_x = 30 * self.tamanho
         mostra_resultado = subtitulo.render(self.resultado, True, AMARELO)
         tela.blit(mostra_resultado, (posicao_x, 270))
-
+        pygame.display.update()
+        pygame.time.delay(1000)
 
 
 
@@ -125,25 +126,25 @@ class Cenario:
         #
         if self.pontos > 10 and self.pontos < 60:
             self.questionario(tela,0)
-            self.passa_resultado(tela,0)
+            # self.passa_resultado(tela,0)
 
         if self.pontos > 60 and self.pontos < 90:
             self.questionario(tela, 1)
-            self.passa_resultado(tela, 1)
+            # self.passa_resultado(tela, 1)
 
         if self.pontos > 90 and self.pontos < 120:
             self.questionario(tela, 2)
-            self.passa_resultado(tela, 2)
+            # self.passa_resultado(tela, 2)
 
         if self.pontos > 120 and self.pontos < 160:
             self.questionario(tela, 3)
-            self.passa_resultado(tela, 3)
+            # self.passa_resultado(tela, 3)
 
         if self.pontos > 160 and self.pontos < 200:
             self.questionario(tela, 4)
-            self.passa_resultado(tela, 4)
+            # self.passa_resultado(tela, 4)
 
-    def processar_eventos(self, eventos):
+    def processar_eventos(self, eventos, tela):
         for e in eventos:
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_BACKSPACE:
@@ -152,6 +153,27 @@ class Cenario:
                 elif e.unicode.isprintable():
                     # Se um caractere imprimível for pressionado, adiciona-o ao texto
                     self.texto_resposta += e.unicode
+                if e.key == pygame.K_RETURN:
+
+                    if self.pontos > 10 and self.pontos < 60:
+                        self.questionario(tela, 0)
+                        self.passa_resultado(tela, 0)
+
+                    if self.pontos > 60 and self.pontos < 90:
+                        self.questionario(tela, 1)
+                        self.passa_resultado(tela, 1)
+
+                    if self.pontos > 90 and self.pontos < 120:
+                        self.questionario(tela, 2)
+                        self.passa_resultado(tela, 2)
+
+                    if self.pontos > 120 and self.pontos < 160:
+                        self.questionario(tela, 3)
+                        self.passa_resultado(tela, 3)
+
+                    if self.pontos > 160 and self.pontos < 200:
+                        self.questionario(tela, 4)
+                        self.passa_resultado(tela, 4)
 
 
 
@@ -276,7 +298,7 @@ if __name__ == "__main__":
 
 
         Pacman.processar_evento(eventos)
-        cenario.processar_eventos(eventos)
+        cenario.processar_eventos(eventos, screen)
 
 
 
