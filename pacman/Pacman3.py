@@ -7,16 +7,31 @@ screen = pygame.display.set_mode((1100, 600), 0)
 
 
 
-fonte = pygame.font.SysFont("arial", 28, True, False)
-subtitulo = pygame.font.SysFont("arial", 20, True, False)
+fonte = pygame.font.SysFont("arial", 18, True, False)
+titulo = pygame.font.SysFont("arial", 32, True, False)
+subtitulo = pygame.font.SysFont("arial", 22, True, False)
 
-# pygame.mixer.music.load("actiontheme-v3.mp3")
-# pygame.mixer.music.play(-1)
+
+
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.load("actiontheme-v3.mp3")
+pygame.mixer.music.play(-1)
+
+som_acertou = pygame.mixer.Sound('acertou.wav')
+som_acertou.set_volume(1.0)
+
+game_over = pygame.mixer.Sound("among.mp3")
+
 
 
 AMARELO = (255, 255, 0)
 PRETO = (0, 0, 0)
 AZUL = (0, 0, 255)
+VERDE = (0, 255, 0)
+VERMELHO = (255, 0, 0)
+BRANCO = (255, 255, 255)
+CORES = [VERDE, VERMELHO]
+COR = 0
 VELOCIDADE = 1
 
 class Cenario:
@@ -28,7 +43,7 @@ class Cenario:
         self.segundo = 0
         self.minuto = 0
         self.pontos = 0
-        self.questoes = ["Quanto é 7 x 7?", "Quanto é 6 x 3?", "Quanto é 3 x 9?", "Quanto é 45 + 7?", "Quanto é 30 - 27?", ""]
+        self.questoes = ["A) Quanto é 7 x 7?", "B) Quanto é 6 x 3?", "C) Quanto é 3 x 9?", "D) Quanto é 45 + 7?", "E) Quanto é 30 - 27?", ""]
         self.gabarito = ["49","18","27","52","3"]
         self.resultado = ''
         self.texto_resposta = ''
@@ -76,7 +91,9 @@ class Cenario:
             self.segundo = 0
             self.minuto += 1
         if self.minuto == 1 and self.segundo == self.pontuacao:
-            exit()
+            if self.minuto == 1 and self.segundo == self.pontuacao - 5:
+                game_over.play()
+            # exit()
 
 
 
@@ -86,33 +103,37 @@ class Cenario:
            posicao_x = 30 * self.tamanho
 
            pergunta = subtitulo.render(self.questoes[numero], True, AMARELO)
-           resposta = subtitulo.render(self.texto_resposta, True, AMARELO)
+           resposta = titulo.render(self.texto_resposta, True, AMARELO)
 
-           tela.blit(pergunta, (posicao_x, 150))
-           tela.blit(resposta, (posicao_x, 250))
+           tela.blit(pergunta, (posicao_x + 145, 170))
+           tela.blit(resposta, (posicao_x + 220, 250))
 
 
     # Aqui fica a função que passa o resultado para a tela
     def passa_resultado(self, tela, index):
+
         if self.texto_resposta == self.gabarito[index]:
             print("Resposta correta")
             self.resultado = "Resposta correta"
+            COR = 0
             self.texto_resposta = ''
             self.pontuacao += 5
+            som_acertou.play()
             print(self.pontuacao)
-
-
 
         elif self.texto_resposta != self.gabarito[index] and self.texto_resposta != "":
             print("Resposta errada")
+            COR = 1
             self.resultado = "Resposta errada"
             self.texto_resposta = ''
 
+
         posicao_x = 30 * self.tamanho
-        mostra_resultado = subtitulo.render(self.resultado, True, AMARELO)
-        tela.blit(mostra_resultado, (posicao_x, 270))
+        mostra_resultado = titulo.render(self.resultado, True, CORES[COR])
+        tela.blit(mostra_resultado, (posicao_x + 100, 350))
         pygame.display.update()
         pygame.time.delay(1000)
+        print(CORES)
 
 
 
@@ -121,10 +142,10 @@ class Cenario:
     def pintar_pontos(self, tela):
         pontos_x = 28 * self.tamanho
         posicao_x = 30 * self.tamanho
-        img_pontos = fonte.render(f"Tempo: 0{self.minuto}: {self.segundo}", True, AMARELO)
-        chamada = subtitulo.render("Acerte e ganhe mas tempo!", True, AMARELO)
+        img_tempo = fonte.render(f"Tempo: 0{self.minuto}: {self.segundo}", True, AMARELO)
+        chamada = titulo.render("Acerte e ganhe mais tempo!", True, BRANCO)
         tela.blit(chamada, (posicao_x, 100))
-        tela.blit(img_pontos, (posicao_x, 50))
+        tela.blit(img_tempo, (posicao_x, 5))
 
         input_box = pygame.Rect(100, 100, 140, 32)
         text = ''
