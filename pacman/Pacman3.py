@@ -10,8 +10,8 @@ screen = pygame.display.set_mode((1100, 600), 0)
 fonte = pygame.font.SysFont("arial", 28, True, False)
 subtitulo = pygame.font.SysFont("arial", 20, True, False)
 
-pygame.mixer.music.load("actiontheme-v3.mp3")
-pygame.mixer.music.play(-1)
+# pygame.mixer.music.load("actiontheme-v3.mp3")
+# pygame.mixer.music.play(-1)
 
 
 AMARELO = (255, 255, 0)
@@ -28,10 +28,11 @@ class Cenario:
         self.segundo = 0
         self.minuto = 0
         self.pontos = 0
-        self.questoes = ["Quanto é 7 x 7?", "Quanto é 6 x 3?", "Quanto é 3 x 9?", "Quanto é 45 + 7?", "Quanto é 30 - 27?"]
+        self.questoes = ["Quanto é 7 x 7?", "Quanto é 6 x 3?", "Quanto é 3 x 9?", "Quanto é 45 + 7?", "Quanto é 30 - 27?", ""]
         self.gabarito = ["49","18","27","52","3"]
         self.resultado = ''
         self.texto_resposta = ''
+        self.pontuacao = 0
         self.matriz = [
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
             [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
@@ -74,7 +75,7 @@ class Cenario:
         if self.segundo == 60:
             self.segundo = 0
             self.minuto += 1
-        if self.minuto == 1:
+        if self.minuto == 1 and self.segundo == self.pontuacao:
             exit()
 
 
@@ -96,11 +97,16 @@ class Cenario:
         if self.texto_resposta == self.gabarito[index]:
             print("Resposta correta")
             self.resultado = "Resposta correta"
+            self.texto_resposta = ''
+            self.pontuacao += 5
+            print(self.pontuacao)
+
 
 
         elif self.texto_resposta != self.gabarito[index] and self.texto_resposta != "":
             print("Resposta errada")
             self.resultado = "Resposta errada"
+            self.texto_resposta = ''
 
         posicao_x = 30 * self.tamanho
         mostra_resultado = subtitulo.render(self.resultado, True, AMARELO)
@@ -156,23 +162,24 @@ class Cenario:
                 if e.key == pygame.K_RETURN:
 
                     if self.pontos > 10 and self.pontos < 60:
-                        self.questionario(tela, 0)
+
                         self.passa_resultado(tela, 0)
 
                     if self.pontos > 60 and self.pontos < 90:
-                        self.questionario(tela, 1)
+
                         self.passa_resultado(tela, 1)
 
                     if self.pontos > 90 and self.pontos < 120:
-                        self.questionario(tela, 2)
+
                         self.passa_resultado(tela, 2)
 
                     if self.pontos > 120 and self.pontos < 160:
-                        self.questionario(tela, 3)
+
+
                         self.passa_resultado(tela, 3)
 
                     if self.pontos > 160 and self.pontos < 200:
-                        self.questionario(tela, 4)
+
                         self.passa_resultado(tela, 4)
 
 
