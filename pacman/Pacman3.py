@@ -13,12 +13,14 @@ subtitulo = pygame.font.SysFont("arial", 22, True, False)
 
 
 
-pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.set_volume(0.7)
 pygame.mixer.music.load("actiontheme-v3.mp3")
 pygame.mixer.music.play(-1)
 
-som_acertou = pygame.mixer.Sound('acertou.wav')
+som_acertou = pygame.mixer.Sound('00_start1.wav')
 som_acertou.set_volume(1.0)
+
+som_errou = pygame.mixer.Sound('15_hit.wav')
 
 game_over = pygame.mixer.Sound("among.mp3")
 
@@ -82,7 +84,7 @@ class Cenario:
         ]
      # Código desenvolvido por Felipe
 
-    def relogio(self):
+    def relogio(self,tela):
         self.tempo  += 1
         if self.tempo == int(20):
             self.tempo = 0
@@ -91,11 +93,20 @@ class Cenario:
             self.segundo = 0
             self.minuto += 1
         if self.minuto == 1 and self.segundo == self.pontuacao:
-            if self.minuto == 1 and self.segundo == self.pontuacao - 5:
-                game_over.play()
+               game_over.play()
+               self.fim_jogo(tela)
+               time.sleep(5)
+               exit()
             # exit()
 
+    # Aqui vai a função game over
 
+    def fim_jogo(self, tela):
+        x = 0
+        y = 200
+        pygame.draw.rect(tela, (255, 0, 0), (x, y, 1100, 200),0)
+        pygame.display.update()
+        pygame.time.delay(1000)
 
 
 # Aqui onde são geradas as perguntas
@@ -122,7 +133,7 @@ class Cenario:
             print(self.pontuacao)
 
         elif self.texto_resposta != self.gabarito[index] and self.texto_resposta != "":
-            print("Resposta errada")
+            som_errou.play()
             COR = 1
             self.resultado = "Resposta errada"
             self.texto_resposta = ''
@@ -143,9 +154,11 @@ class Cenario:
         pontos_x = 28 * self.tamanho
         posicao_x = 30 * self.tamanho
         img_tempo = fonte.render(f"Tempo: 0{self.minuto}: {self.segundo}", True, AMARELO)
+        img_pontuacao = fonte.render(f"Pontuação {self.pontos}", True, AMARELO)
         chamada = titulo.render("Acerte e ganhe mais tempo!", True, BRANCO)
         tela.blit(chamada, (posicao_x, 100))
         tela.blit(img_tempo, (posicao_x, 5))
+        tela.blit(img_pontuacao, (posicao_x + 330, 5))
 
         input_box = pygame.Rect(100, 100, 140, 32)
         text = ''
@@ -308,7 +321,7 @@ if __name__ == "__main__":
         # calcular as regras
         Pacman.calcular_regras()
         cenario.calcular_regras()
-        cenario.relogio()
+        cenario.relogio(screen)
 
         # Pintar a tela
         screen.fill(PRETO)
