@@ -13,8 +13,7 @@ subtitulo = pygame.font.SysFont("arial", 22, True, False)
 
 
 
-pygame.mixer.music.set_volume(0.7)
-pygame.mixer.music.load("actiontheme-v3.mp3")
+fundo = pygame.mixer.music.load("actiontheme-v3.mp3")
 pygame.mixer.music.play(-1)
 
 som_acertou = pygame.mixer.Sound('00_start1.wav')
@@ -85,6 +84,11 @@ class Cenario:
      # Código desenvolvido por Felipe
 
     def relogio(self,tela):
+        if self.pontos == 300:
+            self.fim_jogo(tela, "Parabens você conseguiu!!", VERDE)
+            time.sleep(5)
+            exit()
+
         self.tempo  += 1
         if self.tempo == int(20):
             self.tempo = 0
@@ -93,18 +97,21 @@ class Cenario:
             self.segundo = 0
             self.minuto += 1
         if self.minuto == 1 and self.segundo == self.pontuacao:
+               pygame.mixer.music.stop()
                game_over.play()
-               self.fim_jogo(tela)
+               self.fim_jogo(tela, "Fim de jogo", VERMELHO)
                time.sleep(5)
                exit()
-            # exit()
+
 
     # Aqui vai a função game over
 
-    def fim_jogo(self, tela):
+    def fim_jogo(self, tela, string, cor):
         x = 0
         y = 200
-        pygame.draw.rect(tela, (255, 0, 0), (x, y, 1100, 200),0)
+        fim = titulo.render(string, True, cor)
+        tela.blit(fim, (470, 280))
+        pygame.draw.rect(tela, cor, (x, y, 1100, 200), 80)
         pygame.display.update()
         pygame.time.delay(1000)
 
@@ -137,6 +144,11 @@ class Cenario:
             COR = 1
             self.resultado = "Resposta errada"
             self.texto_resposta = ''
+        elif self.texto_resposta == "":
+            COR = 1
+            self.resultado = "Digite um número"
+
+
 
 
         posicao_x = 30 * self.tamanho
