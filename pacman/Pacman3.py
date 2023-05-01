@@ -23,6 +23,8 @@ som_errou = pygame.mixer.Sound('15_hit.wav')
 
 game_over = pygame.mixer.Sound("among.mp3")
 
+vitoria = pygame.mixer.Sound("Victory.wav")
+
 
 
 AMARELO = (255, 255, 0)
@@ -84,8 +86,10 @@ class Cenario:
      # Código desenvolvido por Felipe
 
     def relogio(self,tela):
-        if self.pontos == 300:
-            self.fim_jogo(tela, "Parabens você conseguiu!!", VERDE)
+        if self.pontos == 306:
+            pygame.mixer.music.stop()
+            vitoria.play()
+            self.fim_jogo(tela, "Você conseguiu!!", VERDE)
             time.sleep(5)
             exit()
 
